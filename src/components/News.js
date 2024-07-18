@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import NewsItem from './NewsItem'
 import Loaders from './Loaders';
 import propTypes from 'prop-types'
+import InfiniteScroll from 'react-infinite-scroll-component';
+import newsImage from '../newsImage.jpg'
 
 
 export class News extends Component {
@@ -33,11 +35,9 @@ export class News extends Component {
   }
 
   fetchNews = async () => {
-    debugger
     let data = await fetch(`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=d27aa66367804fb296c0b7ef1f1d8c82&pageSize=${this.props.pageSize}&page=${this.state.page}`)
     this.setState({ loading: true })
     let parsedData = await data.json();
-    console.log(parsedData)
     this.setState({
       articles: parsedData.articles,
       totalResults: parsedData.totalResults,
@@ -69,7 +69,7 @@ export class News extends Component {
         <div className="row my-2">
           {!this.state.loading && this.state.articles.map((element) => {
             return <div className="col-md-4 my-2" key={element.url}>
-              <NewsItem title={element.title} description={element.description} imageUrl={element.urlToImage ? element.urlToImage : "https://w0.peakpx.com/wallpaper/727/60/HD-wallpaper-breaking-news-news-story-newspaper-news.jpg"} newsUrl={element.url}
+              <NewsItem title={element.title} description={element.description} imageUrl={element.urlToImage ? element.urlToImage : newsImage} newsUrl={element.url}
                 publishedAt={element.publishedAt} author={element.author} source={element.source.name} />
             </div>
           })}
