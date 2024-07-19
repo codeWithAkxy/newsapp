@@ -37,33 +37,31 @@ export class News extends Component {
 
   fetchNews = async () => {
     this.props.setProgress(10);
-    let data = await fetch(`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=e3c16760c2204b9fb53b7427d5c349df&pageSize=${this.props.pageSize}&page=${this.state.page}`)
-    this.setState({ loading: true })
-    this.props.setProgress(30)
+    this.setState({ loading: true });
+    let data = await fetch(`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&pageSize=${this.props.pageSize}&page=${this.state.page}`);
+    this.props.setProgress(30);
     let parsedData = await data.json();
-    this.props.setProgress(70)
+    this.props.setProgress(70);
     this.setState({
       articles: parsedData.articles,
       totalResults: parsedData.totalResults,
       loading: false
-    })
-    this.props.setProgress(100)
+    });
+    this.props.setProgress(100);
   }
 
-  fetchMoreData = async() =>{
-    this.setState({page:++this.state.page+1})
-    const data = await fetch(`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=e3c16760c2204b9fb53b7427d5c349df&pageSize=${this.props.pageSize}&page=${this.state.page}`)
-    this.setState({ loading: true })
-    let parsedData = await data.json();
-    this.setState({
-      articles: this.state.articles.concat(parsedData.articles),
-      totalResults: parsedData.totalResults,
-      loading: false,
-    })
+  fetchMoreData = async () => {
+    this.setState({ page: this.state.page + 1 }, async () => {
+      const data = await fetch(`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&pageSize=${this.props.pageSize}&page=${this.state.page}`);
+      let parsedData = await data.json();
+      this.setState({
+        articles: this.state.articles.concat(parsedData.articles),
+        totalResults: parsedData.totalResults,
+      });
+    });
   }
 
   async componentDidMount() {
-    debugger
     this.fetchNews();
   }
 
@@ -82,14 +80,13 @@ export class News extends Component {
   render() {
     return (
       <>
-        <h1 className='text-center' style={{ margin: '30px 0px' }}>NewsMonkey - {this.capitalize(this.props.category)} Top Headines</h1>
-        {/* {this.state.loading && <Loaders />} */}
-
-        <InfiniteScroll
+        <h1 className='text-center' style={{ margin: '30px 0px' }}>NewsMonkey - {this.capitalize(this.props.category)} Top Headlines</h1>
+        {this.state.loading && <Loaders />}
+         <InfiniteScroll
           dataLength={this.state.articles.length}
           next={this.fetchMoreData}
-          hasMore={this.state.articles.length !== this.state.totalResults}
-          loader={this.state.articles.length !== this.state.totalResults && <Loaders />}
+          hasMore={this.state.articles.length < this.state.totalResults}
+          loader={this.state.articles.length < this.state.totalResults ? <Loaders /> : null}
         >
           <div className="container">
         <div className="row my-2">
