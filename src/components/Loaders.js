@@ -1,14 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 import spinner from '../Pinwheel.gif'
 
-export class Loaders extends Component {
-  render() {
+ const Loaders =() =>{
     return (
       <div  className='text-center'>
        <img src={spinner} alt={spinner} />
       </div>
     )
-  }
 }
 
 export default Loaders
