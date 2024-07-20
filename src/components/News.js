@@ -14,9 +14,6 @@ const News = (props) => {
   const [totalResults, setTotalResults] = useState(0)
   const [hasMore, setHasMore] = useState(true);
 
-  // document.title = `NewsMonkey - ${this.capitalize(props.category)}`
-
-
   const capitalize = (text) => {
     return text.charAt(0).toUpperCase() + text.slice(1)
   }
@@ -48,6 +45,7 @@ const News = (props) => {
   }
 
   useEffect(() => {
+      document.title = `NewsMonkey - ${capitalize(props.category)}`
     fetchNews();
   }, [])
 
